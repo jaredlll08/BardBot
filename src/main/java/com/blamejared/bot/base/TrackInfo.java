@@ -85,11 +85,11 @@ public class TrackInfo {
     
     public String getSpotifySearch() {
         
-        String name = getName();
+        String name = getName().replaceAll("\\(Official Lyric Video\\)", "");
         for(String artist : getArtists()) {
             name = name.replaceAll(artist, "");
         }
-        return "%s %s".formatted(name, String.join(" ", getArtists()));
+        return "%s %s".formatted(name.trim(), String.join(" ", getArtists()));
     }
     
     public Optional<String> getThumbnail() {
