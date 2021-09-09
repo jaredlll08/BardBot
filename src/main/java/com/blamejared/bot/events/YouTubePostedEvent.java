@@ -16,6 +16,7 @@ import org.apache.hc.core5.http.ParseException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class YouTubePostedEvent implements IEvent<MessageReceivedEvent> {
@@ -24,56 +25,58 @@ public class YouTubePostedEvent implements IEvent<MessageReceivedEvent> {
     public void accept(MessageReceivedEvent event) {
         
         String contentDisplay = event.getMessage().getContentDisplay();
+        
+        Optional<String> foundId = Optional.empty();
         if(contentDisplay.contains("https://www.youtube.com/watch?v=")) {
-            String videoId = contentDisplay.split("v=")[1].split("[^a-zA-Z0-9\\-_]")[0];
-            
-            BardBot.INSTANCE.getYouTube().ifPresentOrElse(youTube -> {
-                try {
-                    YouTube.Videos.List request = youTube.videos().list(Collections.singletonList("snippet"));
-                    VideoListResponse response = request.setId(Collections.singletonList(videoId))
-                            .setKey(BardBot.INSTANCE.getGoogleToken())
-                            .setMaxResults(1L)
-                            .execute();
-                    if(response.getItems().isEmpty()) {
-                        event.getChannel().sendMessage("No videos found from that URL!").queue();
-                    } else {
-                        Video video = response.getItems().get(0);
-                        TrackInfo trackInfo = new TrackInfo(video.getSnippet()
-                                .getTitle(), Collections.singleton(video.getSnippet()
-                                .getChannelTitle()
-                                .replace(" - Topic", "")));
-                        
-                        trackInfo.setThumbnail(video.getSnippet().getThumbnails().getHigh().getUrl());
-                        trackInfo.setUrlYoutube("https://www.youtube.com/watch?v=%s".formatted(video.getId()));
-                        
-                        BardBot.INSTANCE.getSpotify().ifPresentOrElse(spotify -> {
-                            try {
-                                Paging<Track> tracks = spotify.searchTracks(trackInfo.getSpotifySearch())
-                                        .limit(1)
-                                        .build()
-                                        .execute();
-                                
-                                if(tracks.getItems().length > 0) {
-                                    trackInfo.setUrlSpotify(tracks.getItems()[0].getExternalUrls()
-                                            .getExternalUrls()
-                                            .get("spotify"));
-                                }
-                                
-                            } catch(IOException | SpotifyWebApiException | ParseException e) {
-                                e.printStackTrace();
-                            }
-                        }, () -> event.getChannel().sendMessage("Error retrieving Spotify API!").queue());
-                        
-                        event.getChannel().sendMessageEmbeds(trackInfo.embed(event).build()).queue();
-                    }
-                } catch(IOException e) {
-                    e.printStackTrace();
-                }
-                
-            }, () -> event.getChannel().sendMessage("Error retrieving Youtube API!").queue());
-            
+            foundId = Optional.of(contentDisplay.split("v=")[1].split("[^a-zA-Z0-9\\-_]")[0]);
+        } else if(contentDisplay.contains("https://youtu.be/")) {
+            foundId = Optional.of(contentDisplay.split("https://youtu.be/")[1].split("[^a-zA-Z0-9\\-_]")[0]);
         }
         
+        foundId.ifPresent(videoId -> BardBot.INSTANCE.getYouTube().ifPresentOrElse(youTube -> {
+            try {
+                YouTube.Videos.List request = youTube.videos().list(Collections.singletonList("snippet"));
+                VideoListResponse response = request.setId(Collections.singletonList(videoId))
+                        .setKey(BardBot.INSTANCE.getGoogleToken())
+                        .setMaxResults(1L)
+                        .execute();
+                if(response.getItems().isEmpty()) {
+                    event.getChannel().sendMessage("No videos found from that URL!").queue();
+                } else {
+                    Video video = response.getItems().get(0);
+                    TrackInfo trackInfo = new TrackInfo(video.getSnippet()
+                            .getTitle(), Collections.singleton(video.getSnippet()
+                            .getChannelTitle()
+                            .replace(" - Topic", "")));
+                    
+                    trackInfo.setThumbnail(video.getSnippet().getThumbnails().getHigh().getUrl());
+                    trackInfo.setUrlYoutube("https://www.youtube.com/watch?v=%s".formatted(video.getId()));
+                    
+                    BardBot.INSTANCE.getSpotify().ifPresentOrElse(spotify -> {
+                        try {
+                            Paging<Track> tracks = spotify.searchTracks(trackInfo.getSpotifySearch())
+                                    .limit(1)
+                                    .build()
+                                    .execute();
+                            
+                            if(tracks.getItems().length > 0) {
+                                trackInfo.setUrlSpotify(tracks.getItems()[0].getExternalUrls()
+                                        .getExternalUrls()
+                                        .get("spotify"));
+                            }
+                            
+                        } catch(IOException | SpotifyWebApiException | ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }, () -> event.getChannel().sendMessage("Error retrieving Spotify API!").queue());
+                    
+                    event.getChannel().sendMessageEmbeds(trackInfo.embed(event).build()).queue();
+                }
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+            
+        }, () -> event.getChannel().sendMessage("Error retrieving Youtube API!").queue()));
     }
     
     @Override
