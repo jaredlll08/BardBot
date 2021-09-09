@@ -42,7 +42,7 @@ dependencies {
 
 task fatJar(type: Jar) {
     manifest {
-        attributes 'Implementation-Title': 'BardBot', 'Implementation-Version': '1.0.0', 'Main-Class': 'com.blamejared.bardbot.BardBot'
+        attributes 'Implementation-Title': 'BardBot', 'Implementation-Version': '1.0.0', 'Main-Class': 'com.blamejared.bot.BardBot'
     }
     baseName = project.name
 
@@ -62,7 +62,7 @@ jar {
     manifest {
         attributes(
                 'Class-Path': configurations.runtimeClasspath.collect { it.getName() }.join(' '),
-                'Main-Class': 'com.blamejared.bardbot.BardBot'
+                'Main-Class': 'com.blamejared.bot.BardBot'
         )
     }
 }
