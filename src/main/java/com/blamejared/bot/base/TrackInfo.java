@@ -85,7 +85,7 @@ public class TrackInfo {
     
     public String getSpotifySearch() {
     
-        return getName().replaceAll("\\(.*\\)", "").trim();
+        return getName().toLowerCase(Locale.ROOT).replaceAll("\\(.*\\)", "").replaceAll("(official (music|lyric)? video)", "").trim();
     }
     
     public Optional<String> getThumbnail() {
