@@ -73,7 +73,7 @@ public class TrackInfo {
         getThumbnail().ifPresent(builder::setImage);
         builder.addField("Spotify", getUrlSpotify()
                 .map("[Play on Spotify](%s)"::formatted)
-                .orElse("No track found!"), true);
+                .orElse("No track found! Searched for `%s`".formatted(getSpotifySearch().replaceAll("`", ""))), true);
         builder.addField("Youtube", getUrlYoutube()
                 .map("[Play on YouTube](%s)"::formatted)
                 .orElse("No video found!"), true);
