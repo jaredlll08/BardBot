@@ -70,7 +70,7 @@ public class TrackInfo {
         
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle(getDisplayName());
-        getThumbnail().ifPresent(builder::setImage);
+//        getThumbnail().ifPresent(builder::setImage);
         builder.addField("Spotify", getUrlSpotify()
                 .map("[Play on Spotify](%s)"::formatted)
                 .orElse("No track found! Searched for `%s`".formatted(getSpotifySearch().replaceAll("`", ""))), true);
