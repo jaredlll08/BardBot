@@ -87,7 +87,8 @@ public class TrackInfo {
         
         return getName().replaceAll("\\u00A0", " ")
                 .replaceAll("(\\(.*\\))|(\\[.*])", "")
-                .replaceAll("(?i)official (music|lyric)? video", "")
+                .replaceAll("(?i)official (music\\s|lyric\\s)? video", "")
+                .replaceAll("'\"'", "")
                 .trim();
     }
     
