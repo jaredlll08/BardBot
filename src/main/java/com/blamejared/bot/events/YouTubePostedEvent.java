@@ -70,7 +70,10 @@ public class YouTubePostedEvent implements IEvent<MessageReceivedEvent> {
                         }
                     }, () -> event.getChannel().sendMessage("Error retrieving Spotify API!").queue());
                     
-                    event.getChannel().sendMessageEmbeds(trackInfo.embed(event).build()).allowedMentions(Collections.emptySet()).queue();
+                    event.getChannel()
+                            .sendMessageEmbeds(trackInfo.embed(event).build())
+                            .allowedMentions(Collections.emptySet())
+                            .queue();
                 }
             } catch(IOException e) {
                 e.printStackTrace();

@@ -4,7 +4,9 @@ import com.wrapper.spotify.model_objects.specification.ArtistSimplified;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TrackInfo {
@@ -70,7 +72,7 @@ public class TrackInfo {
         
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle(getDisplayName());
-//        getThumbnail().ifPresent(builder::setImage);
+        //        getThumbnail().ifPresent(builder::setImage);
         builder.addField("Spotify", getUrlSpotify()
                 .map("[Play on Spotify](%s)"::formatted)
                 .orElse("No track found! Searched for `%s`".formatted(getSpotifySearch().replaceAll("`", ""))), true);

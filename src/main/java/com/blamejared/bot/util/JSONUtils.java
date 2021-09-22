@@ -11,14 +11,17 @@ public interface JSONUtils {
     GsonCompatibilityMode configPretty = new GsonCompatibilityMode.Builder().setPrettyPrinting().build();
     
     default Any deserialize(String json) {
+        
         return JsonIterator.deserialize(config, json);
     }
     
     default String serialize(Object obj) {
+        
         return JsonStream.serialize(config, obj);
     }
     
     default String serializePretty(Object obj) {
+        
         return JsonStream.serialize(configPretty, obj);
     }
     

@@ -1,16 +1,22 @@
 package com.blamejared.bot.events;
 
-import com.blamejared.bot.*;
-import com.blamejared.bot.base.*;
+import com.blamejared.bot.BardBot;
+import com.blamejared.bot.Constants;
+import com.blamejared.bot.base.IEvent;
+import com.blamejared.bot.base.TrackInfo;
 import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.model.*;
+import com.google.api.services.youtube.model.SearchListResponse;
+import com.google.api.services.youtube.model.SearchResult;
 import com.wrapper.spotify.exceptions.SpotifyWebApiException;
 import com.wrapper.spotify.model_objects.specification.Track;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.apache.hc.core5.http.ParseException;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 public class SpotifyPostedEvent implements IEvent<MessageReceivedEvent> {
     

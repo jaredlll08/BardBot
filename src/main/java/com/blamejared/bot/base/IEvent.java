@@ -2,8 +2,6 @@ package com.blamejared.bot.base;
 
 import com.blamejared.bot.BardBot;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Invite;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.GenericEvent;
 
 import java.util.Set;
@@ -23,4 +21,5 @@ public interface IEvent<T extends GenericEvent> extends Consumer<T> {
     Set<Class<? extends T>> getEventTypes();
     
     boolean shouldRun(T event);
+    
 }
