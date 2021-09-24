@@ -1,7 +1,6 @@
 package com.blamejared.bot.events;
 
 import com.blamejared.bot.BardBot;
-import com.blamejared.bot.Constants;
 import com.blamejared.bot.base.IEvent;
 import com.blamejared.bot.base.TrackInfo;
 import com.google.api.services.youtube.YouTube;
@@ -92,8 +91,9 @@ public class YouTubePostedEvent implements IEvent<MessageReceivedEvent> {
     
     @Override
     public boolean shouldRun(MessageReceivedEvent event) {
-        
-        return Constants.VALID_CHANNELS.contains(event.getChannel().getId());
+    
+        return event.getChannel().getName().equals("music");
+//        return Constants.VALID_CHANNELS.contains(event.getChannel().getId());
     }
     
 }
